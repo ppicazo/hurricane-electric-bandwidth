@@ -11,7 +11,7 @@ const UNIT_CONVERSION_MAP = {
 module.exports = {
   requestInstance: axios.create({
     baseURL: 'http://traffic.he.net',
-    paramsSerializer: params => { return `key=${params.key}` },
+    paramsSerializer: params => { return `key=${params.key}`; },
     timeout: 20000
   }),
 
@@ -26,19 +26,35 @@ module.exports = {
     throw Error; // Yes this is super lame and vague...
   },
 
-  scrapBandwidth: function(graphKey) {
+  bandwidthBytes: function(graphKey) {
+    return this.scrapBandwidthText(graphKey).then(bandwidthText => {
+      return this.parseBandwidthSpeed(bandwidthText);
+    });
+  },
+
+  scrapBandwidthText: function(graphKey) {
     return new Promise((resolve, reject) => {
-      this.requestInstance.get('/port.php', { params: { key: graphKey } })
-        .then(response => {
-          let $ = cheerio.load(response.data);
-          $('div.graph95 div.graphnum').each( (i, elm) => {
-            resolve(this.parseBandwidthSpeed($(elm).text()));
+      if (!graphKey) {
+        reject('graphKey is required');
+      }
+      else if (!(graphKey instanceof String || typeof graphKey == 'string')) {
+        reject('graphKey must be a string');
+      }
+      else if (graphKey.length == 0) {
+        reject('grapKey is required');
+      } else {
+        this.requestInstance.get('/port.php', { params: { key: graphKey } })
+          .then(response => {
+            let $ = cheerio.load(response.data);
+            $('div.graph95 div.graphnum').each( (i, elm) => {
+              resolve($(elm).text());
+            });
+            reject(Error('Element not found.'));
+          })
+          .catch(error => {
+            reject(error);
           });
-          reject(Error('Element not found.'));
-        })
-        .catch(error => {
-          reject(error);
-        });
+      }
     });
   },
 };

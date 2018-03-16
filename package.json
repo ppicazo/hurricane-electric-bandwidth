@@ -19,9 +19,12 @@
     "url": "https://github.com/ppicazo/hurricane-electric-bandwidth/issues"
   },
   "homepage": "https://github.com/ppicazo/hurricane-electric-bandwidth#readme",
+  "bin" : { "hurricane-electric-bandwidth" : "./bin/hurricane_electric_bandwidth" },
   "dependencies": {
     "axios": "^0.18.0",
-    "cheerio": "^1.0.0-rc.2"
+    "cheerio": "^1.0.0-rc.2",
+    "meow": "^4.0.0",
+    "sinon": "^4.4.6"
   },
   "devDependencies": {
     "axios-mock-adapter": "^1.14.1",
