@@ -1,6 +1,6 @@
 {
   "name": "hurricane-electric-bandwidth",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Retrieve the current 95th percentile bandwidth usage from a given switch port in Hurricane Electric.",
   "main": "index.js",
   "directories": {
