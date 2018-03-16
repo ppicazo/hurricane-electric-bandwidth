@@ -11,6 +11,7 @@ const UNIT_CONVERSION_MAP = {
 module.exports = {
   requestInstance: axios.create({
     baseURL: 'http://traffic.he.net',
+    paramsSerializer: params => { return `key=${params.key}` },
     timeout: 20000
   }),
 
@@ -27,7 +28,7 @@ module.exports = {
 
   scrapBandwidth: function(graphKey) {
     return new Promise((resolve, reject) => {
-      this.requestInstance.get('/port.php?key=' + graphKey)
+      this.requestInstance.get('/port.php', { params: { key: graphKey } })
         .then(response => {
           let $ = cheerio.load(response.data);
           $('div.graph95 div.graphnum').each( (i, elm) => {
